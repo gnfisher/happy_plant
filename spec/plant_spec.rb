@@ -1,5 +1,7 @@
 require "plant"
 
+MockPlant = Value.new(:health, :watered, :height)
+
 RSpec.describe HappyPlant::Plant do
   it "loses health if watered within 20s of birth" do
     plant = HappyPlant::Plant.new
@@ -27,6 +29,16 @@ RSpec.describe HappyPlant::Plant do
     plant = HappyPlant::Plant.new
     Timecop.freeze(Time.now + 180) do
       expect(plant.status.health).to eq 0
+    end
+  end
+
+  it "grows by 1 if health reaches 10" do
+    mock_plant = MockPlant.new(9, Time.now, 0)
+
+    plant = HappyPlant::Plant.new(mock_plant)
+
+    Timecop.freeze(Time.now + 30) do
+      expect(plant.water.height).to eq plant.height + 1
     end
   end
 end
