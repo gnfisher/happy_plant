@@ -1,5 +1,4 @@
 $LOAD_PATH << '../lib'
-require 'timecop'
 require 'pry'
 
 RSpec.configure do |config|

@@ -1,5 +1,3 @@
-require "values"
-
 module HappyPlant
   class Plant
     WATER_INTERVAL = 30 # seconds
