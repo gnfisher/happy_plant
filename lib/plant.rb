@@ -6,35 +6,50 @@ module HappyPlant
 
     attr_reader :health, :height, :watered
 
-    def initialize(current_plant = PlantStarter.new, health: nil, watered: nil, height: nil)
-      health = health&.negative? ? 0 : health
-      @health = health || current_plant.health
-      @watered = watered || current_plant.watered
-      @height = height || current_plant.height
+    def self.create(health:, watered:, height:)
+      new(health, watered, height)
     end
 
-    def water
-      health = calculate_next_health(watered: true)
-      Plant.new(self, health: next_health(health), watered: Time.now, height: calculate_height(health))
+    def self.init
+      Plant.create(health: 3, watered: Time.now, height: 0)
     end
 
-    def status
-      Plant.new(self, health: calculate_next_health)
+    def water(time)
+      last_watered = calculate_last_watered(time)
+      Plant.create(health: next_health(last_watered, true), height: next_height(last_watered), watered: time)
+    end
+
+    def at_time(time)
+      last_watered = calculate_last_watered(time)
+      Plant.create(health: next_health(last_watered), height: next_height(last_watered), watered: @watered)
     end
 
     private
 
-    def last_watered
-      Time.now.to_i - @watered.to_i
+    def initialize(health, watered, height)
+      @health = health
+      @watered = watered
+      @height = height
     end
 
-    def next_health(health)
-      health === 10 ? 3 : health
+    def calculate_last_watered(time)
+      time.to_i - @watered.to_i
     end
 
-    def calculate_next_health(watered: false)
-      return @health - (last_watered / WATER_INTERVAL) unless watered
+    def next_height(last_watered)
+      calculate_next_health(last_watered) === 10 ? @height + 1 : @height
+    end
 
+    def next_health(last_watered, watering = false)
+      next_health = if watering
+                      calculate_next_health(last_watered)
+                    else
+                      @health / (last_watered / WATER_INTERVAL)
+                    end
+      next_health === 10 ? 3 : next_health
+    end
+
+    def calculate_next_health(last_watered)
       case last_watered
       when 0..20
         @health - 1
@@ -42,16 +57,6 @@ module HappyPlant
         @health + 1
       when 31..Float::INFINITY
         @health - (last_watered / WATER_INTERVAL)
-      end
-    end
-
-    def calculate_height(health)
-      health === 10 ? @height + 1 : @height
-    end
-
-    class PlantStarter < Value.new(:health, :watered, :height)
-      def initialize
-        super(3, Time.now, 0)
       end
     end
   end
