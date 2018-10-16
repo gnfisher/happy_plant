@@ -41,4 +41,26 @@ RSpec.describe HappyPlant::Plant do
       expect(plant.water.height).to eq plant.height + 1
     end
   end
+
+  it "returns to starting health of 3 after growing" do
+    mock_plant = MockPlant.new(9, Time.now, 9)
+
+    plant = HappyPlant::Plant.new(mock_plant)
+
+    Timecop.freeze(Time.now + 30) do
+      expect(plant.water.health).to eq 3
+    end
+  end
+
+  # Something to work on.
+  skip "is dead if health reaches 0" do
+    mock_plant = MockPlant.new(1, Time.now - 60, 0)
+
+    plant = HappyPlant::Plant.new(mock_plant)
+
+    Timecop.freeze do
+      expect(plant.alive?).to be false
+      expect(plant.water).to raise_error DeadPlantError
+    end
+  end
 end

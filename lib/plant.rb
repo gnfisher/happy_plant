@@ -15,7 +15,7 @@ module HappyPlant
 
     def water
       health = calculate_next_health(watered: true)
-      Plant.new(self, health: health, watered: Time.now, height: calculate_height(health))
+      Plant.new(self, health: next_health(health), watered: Time.now, height: calculate_height(health))
     end
 
     def status
@@ -26,6 +26,10 @@ module HappyPlant
 
     def last_watered
       Time.now.to_i - @watered.to_i
+    end
+
+    def next_health(health)
+      health === 10 ? 3 : health
     end
 
     def calculate_next_health(watered: false)
