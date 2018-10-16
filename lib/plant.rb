@@ -12,12 +12,12 @@ module HappyPlant
       Plant.create(health: 3, watered: Time.now, height: 0)
     end
 
-    def water(time)
+    def water(time = Time.now)
       last_watered = calculate_last_watered(time)
       Plant.create(health: next_health(last_watered, true), height: next_height(last_watered), watered: time)
     end
 
-    def at_time(time)
+    def at_time(time = Time.now)
       last_watered = calculate_last_watered(time)
       Plant.create(health: next_health(last_watered), height: next_height(last_watered), watered: @watered)
     end
