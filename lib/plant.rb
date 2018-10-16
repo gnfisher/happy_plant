@@ -35,7 +35,7 @@ module HappyPlant
     end
 
     def next_height(last_watered)
-      calculate_next_health(last_watered) === 10 ? @height + 1 : @height
+      calculate_next_health(last_watered) == 10 ? @height + 1 : @height
     end
 
     def next_health(last_watered, watering = false)
@@ -44,7 +44,7 @@ module HappyPlant
                     else
                       @health / (last_watered / WATER_INTERVAL)
                     end
-      next_health === 10 ? 3 : next_health
+      next_health == 10 ? 3 : next_health
     end
 
     def calculate_next_health(last_watered)
