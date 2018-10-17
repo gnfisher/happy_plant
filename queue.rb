@@ -2,8 +2,7 @@
 require "io/console"
 require "pry"
 
-# this messes up new lines etc how to fix quickly?
-system("stty raw -echo")
+system("stty raw -echo cbreak dsusp undef")
 loop do
   read, _, _ = select([STDIN], nil, nil)
   if read.include?(STDIN)

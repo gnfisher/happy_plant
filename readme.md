@@ -25,6 +25,7 @@ A plant matures when it reaches 10".
 
   - IO/Console gem for manipulating/interacting with the user tty
   - ANSI gem for colors
+  - [Selectable Queue](https://gist.github.com/garybernhardt/2963229)
 
 ### Questions
 
