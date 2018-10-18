@@ -11,6 +11,13 @@
     * < 30s over sunning (health penalty)
     * every complete segment of 60s under sunning (health penalty)
 
+### ISSUES
+
+  - The way we discount health for > 30 seconds is problematic and leads to bad
+    calculations (not caught by tests, should make test to catch scenario and
+fix).
+  - 
+
 A plant dies when its health goes below 0.
 
 A plant grows when its health grows above 10.
@@ -32,3 +39,4 @@ A plant matures when it reaches 10".
   - If we redraw the screen every X seconds, are going to overload the terminal
     history with garbage?
   - Queue.new in Ruby, threads, and this gist from gary bernhardt: https://gist.github.com/garybernhardt/2963229
+

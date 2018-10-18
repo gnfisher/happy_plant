@@ -50,6 +50,18 @@ RSpec.describe HappyPlant::Plant do
     expect(result.height).to eq plant.height + 1
   end
 
+  # Fix it
+  skip "it properly deducts health with multiple #at_time checks" do
+    start_time = Time.now
+    plant1 = HappyPlant::Plant.create(health: 4, height: 0, watered: start_time)
+    plant2 = plant1.at_time(start_time + 40)
+    plant3 = plant2.at_time(start_time + 40)
+
+    result = plant3.at_time(start_time + 40)
+
+    expect(result.health).to eq 0
+  end
+
   # Something to work on.
   skip "is dead if health reaches 0" do
     plant = HappyPlant::Plant.create(health: 1, height: 0, watered: Time.now)

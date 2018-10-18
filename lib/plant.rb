@@ -42,9 +42,15 @@ module HappyPlant
       next_health = if watering
                       calculate_next_health(last_watered)
                     else
-                      @health / (last_watered / WATER_INTERVAL)
+                      @health - (last_watered / WATER_INTERVAL)
                     end
-      next_health == 10 ? 3 : next_health
+      if next_health == 10
+        3
+      elsif next_health < 0
+        0
+      else
+        next_health
+      end
     end
 
     def calculate_next_health(last_watered)
