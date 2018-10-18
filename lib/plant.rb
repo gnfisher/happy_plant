@@ -2,32 +2,33 @@ module HappyPlant
   class Plant
     WATER_INTERVAL = 10 # seconds
 
-    attr_reader :health, :height, :watered
+    attr_reader :health, :height, :watered, :ancestor
 
-    def self.create(health:, watered:, height:)
-      new(health, watered, height)
+    def self.create(health:, watered:, height:, ancestor: nil)
+      new(health, watered, height, ancestor)
     end
 
     def self.init
-      Plant.create(health: 3, watered: Time.now, height: 0)
+      Plant.create(health: 3, watered: Time.now, height: 0, ancestor: nil)
     end
 
     def water(time = Time.now)
       last_watered = calculate_last_watered(time)
-      Plant.create(health: next_health(last_watered, true), height: next_height(last_watered), watered: time)
+      Plant.create(health: next_health(last_watered, true), height: next_height(last_watered), watered: time, ancestor: self)
     end
 
     def at_time(time = Time.now)
       last_watered = calculate_last_watered(time)
-      Plant.create(health: next_health(last_watered), height: next_height(last_watered), watered: @watered)
+      Plant.create(health: next_health(last_watered), height: next_height(last_watered), watered: @watered, ancestor: @ancestor.nil? ? self : @ancestor)
     end
 
     private
 
-    def initialize(health, watered, height)
+    def initialize(health, watered, height, ancestor)
       @health = health
       @watered = watered
       @height = height
+      @ancestor = ancestor
     end
 
     def calculate_last_watered(time)
@@ -42,7 +43,14 @@ module HappyPlant
       next_health = if watering
                       calculate_next_health(last_watered)
                     else
-                      @health - (last_watered / WATER_INTERVAL)
+                      # ancestor is nil
+                      # ancestor is not nil
+                      if @ancestor.nil?
+                        @health - (last_watered / WATER_INTERVAL)
+                      else
+                        # Who knows
+                        @ancestor.health - (last_watered / WATER_INTERVAL)
+                      end
                     end
       if next_health == 10
         3

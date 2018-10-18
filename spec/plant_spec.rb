@@ -1,26 +1,26 @@
 require "plant"
 
 RSpec.describe HappyPlant::Plant do
-  it "loses health if watered within 20s of birth" do
+  it "loses health if watered within 5s of birth" do
     plant = HappyPlant::Plant.init
 
-    result = plant.water(Time.now + 19)
+    result = plant.water(Time.now + 4)
 
     expect(result.health).to eq plant.health - 1
   end
 
-  it "gains health if watered between 20s and 30s of birth" do
+  it "gains health if watered between 5s and 10s of birth" do
     plant = HappyPlant::Plant.init
 
-    result = plant.water(Time.now + 25)
+    result = plant.water(Time.now + 8)
 
     expect(result.health).to eq plant.health + 1
   end
 
-  it "loses health for every interval of 30s that has passed since last watered" do
+  it "loses health for every interval of 10s that has passed since last watered" do
     plant = HappyPlant::Plant.init
 
-    result = plant.water(Time.now + 60)
+    result = plant.water(Time.now + 20)
 
     expect(result.health).to eq plant.health - 2
   end
@@ -36,7 +36,7 @@ RSpec.describe HappyPlant::Plant do
   it "grows by 1 if health reaches 10" do
     plant = HappyPlant::Plant.create(health: 9, height: 0, watered: Time.now)
 
-    result = plant.water(Time.now + 30)
+    result = plant.water(Time.now + 9)
 
     expect(result.height).to eq plant.height + 1
   end
@@ -50,16 +50,26 @@ RSpec.describe HappyPlant::Plant do
     expect(result.height).to eq plant.height + 1
   end
 
+  it "when checked ancestor remains same as ancestor's ancestor" do
+    plant = HappyPlant::Plant.create(health: 9, height: 0, watered: Time.now)
+    watered_plant = plant.water(plant.watered + 8)
+
+    result = watered_plant.at_time(plant.watered + 10)
+
+    expect(watered_plant.ancestor).to eq result.ancestor
+  end
+
   # Broken bad test!
   it "it properly deducts health with multiple #at_time checks" do
     start_time = Time.now
     plant1 = HappyPlant::Plant.create(health: 4, height: 0, watered: start_time)
-    plant2 = plant1.at_time(start_time + 40)
-    plant3 = plant2.at_time(start_time + 45)
+    plant2 = plant1.at_time(start_time + 12)
+    waterme = plant2.water(start_time + 13)
+    plant3 = waterme.at_time(start_time + 15)
 
-    result = plant3.at_time(start_time + 40)
+    result = plant3.at_time(start_time + 16)
 
-    expect(result.health).to eq 1
+    expect(result.health).to eq 3
   end
 
   # Something to work on.
