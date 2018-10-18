@@ -1,6 +1,6 @@
 module HappyPlant
   class Plant
-    WATER_INTERVAL = 30 # seconds
+    WATER_INTERVAL = 10 # seconds
 
     attr_reader :health, :height, :watered
 
@@ -55,11 +55,11 @@ module HappyPlant
 
     def calculate_next_health(last_watered)
       case last_watered
-      when 0..20
+      when 0..5
         @health - 1
-      when 21..30
+      when 6..10
         @health + 1
-      when 31..Float::INFINITY
+      when 11..Float::INFINITY
         @health - (last_watered / WATER_INTERVAL)
       end
     end
