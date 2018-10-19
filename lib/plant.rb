@@ -14,7 +14,7 @@ module HappyPlant
 
     def water(time = Time.now)
       last_watered = calculate_last_watered(time)
-      Plant.create(health: next_health(last_watered, true), height: next_height(last_watered), watered: time, ancestor: self)
+      Plant.create(health: next_health(last_watered, true), height: next_height(last_watered), watered: time, ancestor: nil)
     end
 
     def at_time(time = Time.now)
@@ -32,6 +32,7 @@ module HappyPlant
     end
 
     def calculate_last_watered(time)
+      # ancesotr watered is older use ancestor watered
       time.to_i - @watered.to_i
     end
 

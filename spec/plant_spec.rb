@@ -63,11 +63,10 @@ RSpec.describe HappyPlant::Plant do
   it "it properly deducts health with multiple #at_time checks" do
     start_time = Time.now
     plant1 = HappyPlant::Plant.create(health: 4, height: 0, watered: start_time)
-    plant2 = plant1.at_time(start_time + 12)
-    waterme = plant2.water(start_time + 13)
-    plant3 = waterme.at_time(start_time + 15)
+    plant2 = plant1.at_time(start_time + 2)
+    waterme = plant2.water(start_time + 3)
 
-    result = plant3.at_time(start_time + 16)
+    result = waterme.at_time(start_time + 5)
 
     expect(result.health).to eq 3
   end
